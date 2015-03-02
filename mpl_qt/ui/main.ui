@@ -57,6 +57,9 @@
           <height>32</height>
          </size>
         </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>ToggleButton</string>
         </property>
@@ -70,7 +73,7 @@
          <bool>false</bool>
         </property>
         <property name="default">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -90,10 +93,6 @@
      </widget>
     </item>
    </layout>
-   <zorder>gridLayoutWidget</zorder>
-   <zorder>toggleButton</zorder>
-   <zorder>pushButton</zorder>
-   <zorder>pushButton</zorder>
    <zorder>horizontalSpacer</zorder>
    <zorder>mplFrame</zorder>
    <zorder></zorder>
