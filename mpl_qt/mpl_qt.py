@@ -3,6 +3,7 @@
 import sys
 from PyQt4 import QtCore, QtGui, uic
 
+import numpy as np
 import matplotlib
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
@@ -39,7 +40,8 @@ class MyWindowClass(QtGui.QMainWindow, main.Ui_MainWindow):
         self.toggleButton.clicked.connect(self.toggleButton_clicked)
 
         self.fig = Figure()
-        self.axes = self.fig.add_subplot(111)
+        self.ax1 = self.fig.add_subplot(121)
+        self.ax2 = self.fig.add_subplot(122)
         self.canvas = FigureCanvas(self.fig)
         self.canvas.setParent(self.mplFrame)
         self.canvas.mpl_connect('pick_event', self.on_pick)
@@ -55,18 +57,26 @@ class MyWindowClass(QtGui.QMainWindow, main.Ui_MainWindow):
     def on_draw(self):
         """ Redraws the figure
         """
-        self.data = [23, 34, 84, 75, 23, 12]
-        x = range(len(self.data))
+        for ax in [self.ax1, self.ax2]:
+            ax.clear()
+            ax.grid()
 
-        self.axes.clear()
-        self.axes.grid()
-        self.axes.bar(
-            left=x,
-            height=self.data,
+        x = np.random.randint(low=-10, high=10, size=10)
+        y = np.random.randint(low=-10, high=10, size=10)
+        #self.ax1.scatter(x, y)
+        self.ax1.quiver(x, y, x, y)
+        self.ax1.set_aspect('equal')
+
+        d = [23, 34, 84, 75, 23, 12]
+        r = range(len(d))
+        self.ax2.bar(
+            left=r,
+            height=d,
             width=0.3,
             align='center',
             alpha=0.44,
             picker=5)
+
         self.canvas.draw()
 
     def on_pick(self, event):
