@@ -18,6 +18,46 @@ class QuiverModel(object):
         self.xydev = vxy
 
 
+class TableModel(QtCore.QAbstractTableModel):
+
+    def __init__(self, parent, pxy, vxy, *args):
+        if pxy.shape != vxy.shape:
+            raise ValueError("pxy and vxy have to be of same shape")
+        super(TableModel, self).__init__(parent, *args)
+        self.data = np.concatenate([pxy, vxy], axis=1)
+        self.header = ["x", "y", "xdev", "ydev"]
+
+    def rowCount(self, parent):
+        #return self.data.shape[0]
+        return len(self.data)
+
+    def columnCount(self, parent):
+        #return self.data.shape[1]
+        return len(self.data[0])
+
+    def data(self, index, role):
+        print(index.row())
+        if not index.isValid():
+            return None
+        elif role != QtCore.Qt.DisplayRole:
+            return None
+        return self.data[index.row(), index.column()]
+
+    def headerData(self, col, orientation, role):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+            return self.header[col]
+        return None
+
+#    def sort(self, col, order):
+#        """sort table by given column number col"""
+#        self.emit(SIGNAL("layoutAboutToBeChanged()"))
+#        self.mylist = sorted(self.mylist,
+#                             key=operator.itemgetter(col))
+#        if order == Qt.DescendingOrder:
+#            self.mylist.reverse()
+#        self.emit(SIGNAL("layoutChanged()"))
+
+
 class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
 
     def __init__(self, parent=None):
@@ -41,7 +81,12 @@ class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
         self.scaleEdit.editingFinished.connect(self.on_edit_scale)
         self.keylengthEdit.setText(str(self.quiver_plot.key_length))
         self.keylengthEdit.editingFinished.connect(self.on_edit_key_length)
-        self.tabWidget.addTab(self.quiver_plot, "quiver")
+        self.tabWidget.addTab(self.quiver_plot, "plot")
+
+        self.table_view = QtGui.QTableView()
+        self.tmodel = TableModel(self, pxy, vxy)
+        self.table_view.setModel(self.tmodel)
+        self.tabWidget.addTab(self.table_view, "data")
 
     def on_edit_key_length(self):
         self.quiver_plot.key_length = float(self.keylengthEdit.text())
