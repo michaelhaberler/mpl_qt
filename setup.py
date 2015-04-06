@@ -1,74 +1,59 @@
+from __future__ import print_function
 
 import os
-import sys
-from setuptools import setup
-
-from glob import glob
 import os.path as op
+import sys
+from glob import glob
 
+from setuptools import setup
 import mpl_qt
 
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    return open(op.join(op.dirname(__file__), fname)).read()
 
-def setup_package():
-
+def compile_ui_files(uifiles, compiler, extension=".py"):
     from subprocess import call
 
-    for uifile in glob(op.join('mpl_qt', 'ui', '*.ui')):
-        uipyfile = '%s%s' % (uifile[:-2], 'py')
-        command = ["pyuic4", "-o", uipyfile, uifile]
+    for uifile in uifiles:
+        uipyfile = "{}{}".format(op.splitext(uifile)[0], extension)
+        command = [compiler, "-o", uipyfile, uifile]
         try:
             exitcode = call(command)
-            print command, exitcode
+            print("{} Status={}".format(" ".join(command), exitcode))
         except OSError:
             exitcode = 1
         if exitcode:
-            if os.path.exists(uipyfile):
-                print >> sys.stderr, \
-                    """Warning: unable to recompile '%s' to '%s' using
-                    pyuic4 (using existing file).""" % (uifile, uipyfile)
+            if op.exists(uipyfile):
+                print("Warning: unable to compile '{}' to '{}' using "
+                      "{} (using existing file).".format(compiler, uifile,
+                                                         uipyfile),
+                      file=sys.stderr)
             else:
-                print >> sys.stderr, \
-                    """ERROR: unable to compile '%s' to '%s' using
-                    pyuic4. pyuic4 is included in the PyQt4 development
-                    package.""" % (uifile, uipyfile)
+                print("ERROR: unable to compile '{}' to '{}' using "
+                      "{}.".format(compiler, compiler, uifile, uipyfile),
+                      file=sys.stderr)
                 sys.exit(1)
 
-    for rcfile in glob(op.join('poclib', 'qtgui', 'ui', '*.qrc')):
-        rcpyfile = '%s%s' % (rcfile[:-4], '_rc.py')
-        command = ["pyrcc4", "-o", rcpyfile, rcfile]
-        try:
-            exitcode = call(command)
-            print command, exitcode
-        except OSError:
-            exitcode = 1
-        if exitcode:
-            if os.path.exists(rcpyfile):
-                print >> sys.stderr, \
-                    """Warning: unable to recompile '%s' to '%s' using
-                    pyrcc4 (using existing file).""" % (rcfile, rcpyfile)
-            else:
-                print >> sys.stderr, \
-                    """ERROR: unable to compile '%s' to '%s' using
-                    pyrcc4. pyrcc4 is included in the PyQt4 development
-                    package.""" % (rcfile, rcpyfile)
-                sys.exit(1)
+def compile_ui():
+    compile_ui_files(glob(op.join('mpl_qt', 'ui', '*.ui')), "pyside-uic")
+    compile_ui_files(glob(op.join('mpl_qt', 'ui', '*.qrc')), "pyside-rcc",
+                     extension="_rc.py")
 
+def setup_package():
     setup(
         name = "mpl_qt",
         version = mpl_qt.__version__,
-        author = "dont't ask",
-        author_email = "dontask@gmail.com",
-        description = ("dont't ask"),
+        author = "Michael Haberler",
+        author_email = "me@github",
+        description = "Example for embedding matplotlib in PySide GUI.",
         license = "BSD",
-        keywords = "kw",
-        url = "url",
+        keywords = "matplotlib, PySide",
+        url = "https://github.com/michaelhaberler/mpl_qt",
         packages=['mpl_qt', 'mpl_qt.ui'],
         scripts=['bin/mpl_qt'],
         package_data={'': ['README.md']},
-#        long_description=read('README.md'),
+        long_description=read('README.md'),
         classifiers=[
             "Development Status :: 3 - Alpha",
             "Topic :: Utilities",
@@ -78,4 +63,5 @@ def setup_package():
 
 
 if __name__ == '__main__':
+    compile_ui()
     setup_package()
