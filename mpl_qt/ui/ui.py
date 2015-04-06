@@ -24,14 +24,27 @@ class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
+        # define model
         gx, gy = np.meshgrid(np.linspace(-5, 5, 5), np.linspace(-5, 5, 5))
         pxy = np.array([gx.flatten(), gy.flatten()]).T
         phi = 0.5 * np.pi
         m = np.array([[np.cos(phi), np.sin(phi)],
                       [-np.sin(phi), np.cos(phi)]])
-        pxy2 = np.dot(pxy, m) * 5
+        #pxy2 = np.dot(pxy, m) * 5
+        pxy2 = pxy + np.array([1, 0])
         vxy = pxy - pxy2
 
+        # set up views and signals and slots
         self.model = QuiverModel(pxy, vxy)
-        self.scatter_plot = plot.QuiverPlotWidget(parent=self, model=self.model)
-        self.setCentralWidget(self.scatter_plot)
+        self.quiver_plot = plot.QuiverPlotWidget(parent=self, model=self.model)
+        self.scaleEdit.setText(str(self.quiver_plot.scale))
+        self.scaleEdit.editingFinished.connect(self.on_edit_scale)
+        self.keylengthEdit.setText(str(self.quiver_plot.key_length))
+        self.keylengthEdit.editingFinished.connect(self.on_edit_key_length)
+        self.tabWidget.addTab(self.quiver_plot, "quiver")
+
+    def on_edit_key_length(self):
+        self.quiver_plot.key_length = float(self.keylengthEdit.text())
+
+    def on_edit_scale(self):
+        self.quiver_plot.scale = float(self.scaleEdit.text())

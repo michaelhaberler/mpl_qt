@@ -90,36 +90,67 @@ class QuiverPlotWidget(PlotWidget):
     Attributes
     ----------
     model :
-        Has attributes xy and xydev (arrays of shape = (n, 2)).
+        Has attributes xy, xydev (arrays of shape = (n, 2)) and unit (str).
     """
 
 
     def __init__(self, parent=None, model=None):
         self.model = model
+        key_sample = self.model.xydev[(self.model.xydev[:, 0] != 0) |
+                                      (self.model.xydev[:, 1] != 0)]
+        self._key_length = np.sqrt(np.mean(np.sum(key_sample**2, axis=1)))
+        self._scale = 1.0
+        self._unit = ""
         super(QuiverPlotWidget, self).__init__(parent)
 
+    @property
+    def scale(self):
+        return self._scale
+
+    @scale.setter
+    def scale(self, scale):
+        self._scale = scale
+        self.on_draw()
+
+    @property
+    def key_length(self):
+        return self._key_length
+
+    @key_length.setter
+    def key_length(self, length):
+        self._key_length = length
+        self.on_draw()
+
+    @property
+    def unit(self):
+        return self._unit
+
+    @unit.setter
+    def unit(self, unit):
+        self._unit = unit
+        self.on_draw()
+
     def on_draw(self):
-        """
-        .. todo::
-            Rescale key on changing the widget size.
-        """
         self.ax.clear()
 
         xy = self.model.xy
         xydev = self.model.xydev
         qax = self.ax.quiver(xy[:, 0], xy[:, 1],
-                             xydev[:, 0], xydev[:, 1], picker=True)
+                             xydev[:, 0], xydev[:, 1],
+                             units="xy",
+                             scale=self.scale,
+                             picker=True)
 
-        key_sample = xydev[(xydev[:, 0] != 0) |
-                           (xydev[:, 1] != 0)]
-        key_length = np.sqrt(np.mean(np.sum(key_sample**2, axis=1)))
-        unit = 'm'
-        label = unit
-        self.ax.set_xlabel(label)
-        self.ax.set_ylabel(label)
-        self.ax.quiverkey(qax, 0.95, 0.95, U=key_length, coordinates="axes",
-                          label="{:2.3e} {}".format(key_length, unit),
-                          linewidths=(1,), edgecolors=('k'), color="r",
+        self.ax.quiverkey(qax, 1.05, 1.05,
+                          U=self.key_length,
+                          coordinates="axes",
+                          label="{:2.3e} {}".format(self.key_length, self.unit),
+                          linewidths=(1,),
+                          edgecolors=('k'),
+                          color="r",
                           labelpos="S")
+
+        self.ax.set_xlabel(self.unit)
+        self.ax.set_ylabel(self.unit)
 
         self.canvas.draw()
