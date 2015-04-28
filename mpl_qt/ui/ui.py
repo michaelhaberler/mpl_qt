@@ -15,7 +15,7 @@ class QuiverModel(object):
 
     def __init__(self, pxy, vxy):
         self.xy = pxy
-        self.xydev = vxy
+        self.xyvalue = vxy
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -24,24 +24,21 @@ class TableModel(QtCore.QAbstractTableModel):
         if pxy.shape != vxy.shape:
             raise ValueError("pxy and vxy have to be of same shape")
         super(TableModel, self).__init__(parent, *args)
-        self.data = np.concatenate([pxy, vxy], axis=1)
-        self.header = ["x", "y", "xdev", "ydev"]
+        self.model = np.concatenate([pxy, vxy], axis=1)
+        self.header = ["x", "y", "xvalue", "yvalue"]
 
     def rowCount(self, parent):
-        #return self.data.shape[0]
-        return len(self.data)
+        return len(self.model)
 
     def columnCount(self, parent):
-        #return self.data.shape[1]
-        return len(self.data[0])
+        return len(self.model[0])
 
     def data(self, index, role):
-        print(index.row())
         if not index.isValid():
             return None
         elif role != QtCore.Qt.DisplayRole:
             return None
-        return self.data[index.row(), index.column()]
+        return str(self.model[index.row(), index.column()])
 
     def headerData(self, col, orientation, role):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:

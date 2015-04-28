@@ -90,14 +90,14 @@ class QuiverPlotWidget(PlotWidget):
     Attributes
     ----------
     model :
-        Has attributes xy, xydev (arrays of shape = (n, 2)) and unit (str).
+        Has attributes xy, xyvalue (arrays of shape = (n, 2)) and unit (str).
     """
 
 
     def __init__(self, parent=None, model=None):
         self.model = model
-        key_sample = self.model.xydev[(self.model.xydev[:, 0] != 0) |
-                                      (self.model.xydev[:, 1] != 0)]
+        key_sample = self.model.xyvalue[(self.model.xyvalue[:, 0] != 0) |
+                                        (self.model.xyvalue[:, 1] != 0)]
         self._key_length = np.sqrt(np.mean(np.sum(key_sample**2, axis=1)))
         self._scale = 1.0
         self._unit = ""
@@ -134,9 +134,9 @@ class QuiverPlotWidget(PlotWidget):
         self.ax.clear()
 
         xy = self.model.xy
-        xydev = self.model.xydev
+        xyvalue = self.model.xyvalue
         qax = self.ax.quiver(xy[:, 0], xy[:, 1],
-                             xydev[:, 0], xydev[:, 1],
+                             xyvalue[:, 0], xyvalue[:, 1],
                              units="xy",
                              scale=self.scale,
                              picker=True)
