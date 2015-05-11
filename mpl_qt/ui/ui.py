@@ -7,6 +7,10 @@ import numpy as np
 from PySide import QtGui
 from PySide import QtCore
 
+import matplotlib
+matplotlib.use("Qt4Agg")
+matplotlib.rcParams['backend.qt4'] = 'PySide'
+
 import mpl_qt.ui.main as main
 import mpl_qt.ui.plot as plot
 

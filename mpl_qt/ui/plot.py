@@ -26,7 +26,7 @@ class PlotWidget(QtGui.QWidget):
         self.ax.grid(True)
 
         self.canvas = FigureCanvas(self.fig)
-        self.canvas.setParent(self)
+        #self.canvas.setParent(self)
         self.canvas.mpl_connect('pick_event', self.on_pick)
 
         self.mpl_toolbar = NavigationToolbar2QT(self.canvas, self)
