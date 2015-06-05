@@ -71,26 +71,32 @@ class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
         phi = 0.5 * np.pi
         m = np.array([[np.cos(phi), np.sin(phi)],
                       [-np.sin(phi), np.cos(phi)]])
-        #pxy2 = np.dot(pxy, m) * 5
-        pxy2 = pxy + np.array([1, 0])
+        pxy2 = np.dot(pxy, m)
+        #pxy2 = pxy + np.array([1, 0])
         vxy = pxy - pxy2
 
         # set up views and signals and slots
         self.model = QuiverModel(pxy, vxy)
         self.quiver_plot = plot.QuiverPlotWidget(parent=self, model=self.model)
-        self.scaleEdit.setText(str(self.quiver_plot.scale))
-        self.scaleEdit.editingFinished.connect(self.on_edit_scale)
-        self.keylengthEdit.setText(str(self.quiver_plot.key_length))
-        self.keylengthEdit.editingFinished.connect(self.on_edit_key_length)
-        self.tabWidget.addTab(self.quiver_plot, "plot")
+        self.mesh_plot = plot.MeshplotWidget(parent=self, model=self.model)
+
+        self.tabWidget.addTab(self.quiver_plot, "quiver")
+        self.tabWidget.addTab(self.mesh_plot, "mesh")
 
         self.table_view = QtGui.QTableView()
         self.tmodel = TableModel(self, pxy, vxy)
         self.table_view.setModel(self.tmodel)
         self.tabWidget.addTab(self.table_view, "data")
 
+        self.scaleEdit.setText(str(self.quiver_plot.scale))
+        self.scaleEdit.editingFinished.connect(self.on_edit_scale)
+        self.keylengthEdit.setText(str(self.quiver_plot.key_length))
+        self.keylengthEdit.editingFinished.connect(self.on_edit_key_length)
+
     def on_edit_key_length(self):
         self.quiver_plot.key_length = float(self.keylengthEdit.text())
 
     def on_edit_scale(self):
-        self.quiver_plot.scale = float(self.scaleEdit.text())
+        scale = float(self.scaleEdit.text())
+        self.quiver_plot.scale = scale
+        self.mesh_plot.scale = scale
