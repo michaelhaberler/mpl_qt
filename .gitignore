@@ -5,28 +5,29 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
+# Packages
 *.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+
+# ipython
+.ipynb_checkpoints 
 
 # Installer logs
 pip-log.txt
@@ -44,11 +45,9 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
+# editor
+*~
+.#*
+
+# log files created by examples
 *.log
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
