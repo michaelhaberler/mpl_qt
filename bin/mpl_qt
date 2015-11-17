@@ -16,12 +16,13 @@ import logging
 
 #logging.basicConfig(level=logging.DEBUG,
 #                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-LOGGER = logging.getLogger("")
+LOGGER = logging.getLogger("mpl_qt")
 fmt = logging.Formatter('%(levelname)s %(module)s %(funcName)s %(message)s')
-sh = logging.StreamHandler()
+sh = logging.StreamHandler(stream=sys.stdout)
 sh.setFormatter(fmt)
 sh.setLevel(logging.DEBUG)
 LOGGER.addHandler(sh)
+LOGGER.setLevel(logging.DEBUG)
 
 
 if __name__ == "__main__":
