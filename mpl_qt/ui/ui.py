@@ -3,6 +3,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import numpy as np
+import logging
 
 from PySide import QtGui
 from PySide import QtCore
@@ -13,6 +14,9 @@ matplotlib.rcParams['backend.qt4'] = 'PySide'
 
 import mpl_qt.ui.main as main
 import mpl_qt.ui.plot as plot
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class QuiverModel(object):
@@ -50,13 +54,13 @@ class TableModel(QtCore.QAbstractTableModel):
         return None
 
 #    def sort(self, col, order):
-#        """sort table by given column number col"""
-#        self.emit(SIGNAL("layoutAboutToBeChanged()"))
-#        self.mylist = sorted(self.mylist,
-#                             key=operator.itemgetter(col))
-#        if order == Qt.DescendingOrder:
-#            self.mylist.reverse()
-#        self.emit(SIGNAL("layoutChanged()"))
+    #        """sort table by given column number col"""
+    #        self.emit(SIGNAL("layoutAboutToBeChanged()"))
+    #        self.mylist = sorted(self.mylist,
+    #                             key=operator.itemgetter(col))
+    #        if order == Qt.DescendingOrder:
+        #            self.mylist.reverse()
+        #        self.emit(SIGNAL("layoutChanged()"))
 
 
 class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
@@ -76,6 +80,7 @@ class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
         vxy = pxy - pxy2
 
         # set up views and signals and slots
+        LOGGER.debug("set up")
         self.model = QuiverModel(pxy, vxy)
         self.quiver_plot = plot.QuiverPlotWidget(parent=self, model=self.model)
         self.mesh_plot = plot.MeshplotWidget(parent=self, model=self.model)
@@ -94,9 +99,11 @@ class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
         self.keylengthEdit.editingFinished.connect(self.on_edit_key_length)
 
     def on_edit_key_length(self):
+        LOGGER.debug("on_edit_key_length")
         self.quiver_plot.key_length = float(self.keylengthEdit.text())
 
     def on_edit_scale(self):
+        LOGGER.debug("on_edit_scale")
         scale = float(self.scaleEdit.text())
         self.quiver_plot.scale = scale
         self.mesh_plot.scale = scale

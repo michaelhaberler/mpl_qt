@@ -12,9 +12,21 @@ import sys
 from PySide import QtGui
 
 import mpl_qt.ui.ui as ui
+import logging
+
+#logging.basicConfig(level=logging.DEBUG,
+#                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+LOGGER = logging.getLogger("")
+fmt = logging.Formatter('%(levelname)s %(module)s %(funcName)s %(message)s')
+sh = logging.StreamHandler()
+sh.setFormatter(fmt)
+sh.setLevel(logging.DEBUG)
+LOGGER.addHandler(sh)
+
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
+    LOGGER.info("start")
     main_window = ui.MainWindow(parent=None)
     main_window.show()
     sys.exit(app.exec_())

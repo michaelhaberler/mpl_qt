@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import sys
 import numpy as np
+import logging
 
 from PySide import QtGui
 from PySide import QtCore
@@ -14,6 +15,9 @@ from matplotlib.figure import Figure
 import matplotlib as mpl
 
 import mpl_qt.grid as grid
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class PlotWidget(QtGui.QWidget):
@@ -134,6 +138,7 @@ class QuiverPlotWidget(PlotWidget):
         self.on_draw()
 
     def on_draw(self):
+        LOGGER.debug("on_draw")
         self.ax.clear()
 
         xy = self.model.xy
@@ -162,6 +167,7 @@ class QuiverPlotWidget(PlotWidget):
 class MeshplotWidget(PlotWidget):
 
     def __init__(self, parent=None, model=None):
+        LOGGER.debug("__init__")
         self.model = model
         self._scale = 1.0
         self._unit = ""
@@ -186,6 +192,7 @@ class MeshplotWidget(PlotWidget):
         self.on_draw()
 
     def on_draw(self):
+        LOGGER.debug("on_draw")
         self.ax.clear()
 
         xy = self.model.xy
