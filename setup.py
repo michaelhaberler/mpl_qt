@@ -36,8 +36,8 @@ def compile_ui_files(uifiles, compiler, extension=".py"):
                 sys.exit(1)
 
 def compile_ui():
-    compile_ui_files(glob(op.join('mpl_qt', 'ui', '*.ui')), "pyside-uic")
-    compile_ui_files(glob(op.join('mpl_qt', 'ui', '*.qrc')), "pyside-rcc",
+    compile_ui_files(glob(op.join('mpl_qt', 'ui', '*.ui')), "pyside2-uic")
+    compile_ui_files(glob(op.join('mpl_qt', 'ui', '*.qrc')), "pyside2-rcc",
                      extension="_rc.py")
 
 def setup_package():

@@ -71,7 +71,7 @@ def grid_size(x, tolerance=0.001):
     else:
         dx = np.median(dx)
 
-    nx = np.round((x.max() - x.min()) / dx + 1)
+    nx = np.round((x.max() - x.min()) / dx + 1).astype(np.int)
     x0 = x.min()
     x1 = x.max() #x0 + nx*dx
     return x0, x1, dx, nx

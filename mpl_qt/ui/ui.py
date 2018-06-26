@@ -5,12 +5,12 @@ from __future__ import absolute_import
 import numpy as np
 import logging
 
-from PySide import QtGui
-from PySide import QtCore
+from PySide2 import QtWidgets
+from PySide2 import QtCore
 
 import matplotlib
-matplotlib.use("Qt4Agg")
-matplotlib.rcParams['backend.qt4'] = 'PySide'
+matplotlib.use("Qt5Agg")
+matplotlib.rcParams['backend.qt5'] = 'PySide2'
 
 import mpl_qt.ui.main as main
 import mpl_qt.ui.plot as plot
@@ -63,7 +63,7 @@ class TableModel(QtCore.QAbstractTableModel):
         #        self.emit(SIGNAL("layoutChanged()"))
 
 
-class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
+class MainWindow(QtWidgets.QMainWindow, main.Ui_MainWindow):
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -88,7 +88,7 @@ class MainWindow(QtGui.QMainWindow, main.Ui_MainWindow):
         self.tabWidget.addTab(self.quiver_plot, "quiver")
         self.tabWidget.addTab(self.mesh_plot, "mesh")
 
-        self.table_view = QtGui.QTableView()
+        self.table_view = QtWidgets.QTableView()
         self.tmodel = TableModel(self, pxy, vxy)
         self.table_view.setModel(self.tmodel)
         self.tabWidget.addTab(self.table_view, "data")

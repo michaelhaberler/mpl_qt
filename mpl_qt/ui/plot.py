@@ -6,11 +6,11 @@ import sys
 import numpy as np
 import logging
 
-from PySide import QtGui
-from PySide import QtCore
+from PySide2 import QtWidgets
+from PySide2 import QtCore
 
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 from matplotlib.figure import Figure
 import matplotlib as mpl
 
@@ -20,7 +20,7 @@ import mpl_qt.grid as grid
 LOGGER = logging.getLogger(__name__)
 
 
-class PlotWidget(QtGui.QWidget):
+class PlotWidget(QtWidgets.QWidget):
     """Base class for plot widgets.
     """
 
@@ -38,7 +38,7 @@ class PlotWidget(QtGui.QWidget):
 
         self.mpl_toolbar = NavigationToolbar2QT(self.canvas, self)
 
-        self.verticalLayout = QtGui.QVBoxLayout(self)
+        self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.addWidget(self.canvas)
         self.verticalLayout.addWidget(self.mpl_toolbar)
 
@@ -57,7 +57,7 @@ class PlotWidget(QtGui.QWidget):
         event : matplotlib.backend_bases.PickEvent
         """
         msg = "You've clicked :\n {}".format(event)
-        QtGui.QMessageBox.information(self, "Click!", msg)
+        QtWidgets.QMessageBox.information(self, "Click!", msg)
 
 
 class ScatterPlotWidget(PlotWidget):
@@ -89,7 +89,7 @@ class ScatterPlotWidget(PlotWidget):
         i = event.ind
         xy = self.model.xy
         msg = "You've clicked on coords:\n {}".format(xy[i])
-        QtGui.QMessageBox.information(self, "Click!", msg)
+        QtWidgets.QMessageBox.information(self, "Click!", msg)
 
 
 class QuiverPlotWidget(PlotWidget):
